@@ -7,4 +7,7 @@ export class PostModel {
 
   @Field((type) => String)
   title: string;
+
+  @Field((type) => String)
+  emoji: string;
 }

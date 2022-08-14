@@ -1,14 +1,14 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
-import { PbEnv } from '@pb-config/environments/pb-env.service';
 import { PostModel } from '@pb-components/posts/interfaces/post.model';
-import { ConfigService } from '@nestjs/config';
+import { PrismaService } from './../prisma/prisma.service';
+import { PbEnv } from '@pb-config/environments/pb-env.service';
 
 @Resolver((of) => PostModel)
 export class PostsResolver {
     constructor(
-        private configService: ConfigService,
-        private pbEnv: PbEnv
-    ) {}
+        private readonly prisma: PrismaService,
+        private readonly pbEnv: PbEnv
+        ) {}
 
     @Query(() => [PostModel], { name: 'posts', nullable: true })
     async getPosts() {
@@ -23,12 +23,17 @@ export class PostsResolver {
             },
         ];
     }
-    @Query(()=>String, {name: 'helloConfiguration'})
-    helloConfiguration() :number{
-        return this.configService.get<number>('PORT') // 3333 (number型になります)
+
+    @Query(() => [PostModel], { name: 'prismaPosts', nullable: true })
+    async getPostsByPrisma() {
+        return this.prisma.post.findMany();
     }
-    @Query(()=>String)
-    helloEnv(): string{
-        return this.pbEnv.DatabaseUrl;
+
+    @Query(() => [String], { name: 'hello', nullable: false })
+    async getJustString() {
+        return [
+            this.pbEnv.DatabaseUrl,
+            this.pbEnv.NodeEnv
+        ]
     }
 }

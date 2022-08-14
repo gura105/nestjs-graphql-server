@@ -3,12 +3,13 @@
 # ------------------------------------------------------
 
 type PostModel {
+  emoji: String!
   id: String!
   title: String!
 }
 
 type Query {
-  helloConfiguration: String!
-  helloEnv: String!
+  hello: [String!]!
   posts: [PostModel!]
+  prismaPosts: [PostModel!]
 }
