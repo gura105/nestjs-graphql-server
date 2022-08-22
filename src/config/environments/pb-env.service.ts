@@ -69,6 +69,10 @@ export class PbEnv {
       sortSchema: true,
       debug: true,
       playground: true,
+      cors: {
+        origin: '*',
+        credentials: true,
+      }
     };
 
     // 本番環境：実行だけ
