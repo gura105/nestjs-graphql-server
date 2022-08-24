@@ -1,10 +1,31 @@
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { PostModel } from '@pb-components/posts/interfaces/post.model';
 import { PrismaService } from './../prisma/prisma.service';
 import { PbEnv } from '@pb-config/environments/pb-env.service';
 import { GetPostsArgs } from './interfaces/get-posts-connection.args';
 import { FindPostArgs } from './interfaces/find-post-args';
+import { S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { Readable } from 'stream';
 
+function streamToString(stream: Readable) {
+  const chunks = [];
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
+    stream.on('error', (err) => reject(err));
+    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
+}
+
+const s3Client = new S3Client({
+  region: 'ap-northeast-1',
+  endpoint: 'http://127.0.0.1:9000',
+  forcePathStyle: true,
+});
+
+const bucket = 'dev-blog-nextjs';
+
+console.log(s3Client.config.credentials);
 @Resolver((of) => PostModel)
 export class PostsResolver {
   constructor(
@@ -38,5 +59,19 @@ export class PostsResolver {
         contentPath: args.contentPath,
       },
     });
+  }
+
+  @ResolveField(() => String, { name: 'bodyMarkdown', nullable: false })
+  async bodyMarkdown(@Parent() post: PostModel) {
+    const { contentPath } = post;
+    const { Body } = await s3Client.send(
+      new GetObjectCommand({
+        Bucket: bucket,
+        Key: contentPath,
+      }),
+    );
+    const result = await streamToString(Body as Readable);
+
+    return result;
   }
 }
