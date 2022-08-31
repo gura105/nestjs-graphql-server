@@ -1,3 +1,11 @@
+## What's this?
+
+- Repository for studying GraphQL.
+- The purpose is learning how to develop a NestJS back-end server with GraphQL.
+- The front-end server is the following repository.
+  - https://github.com/gura105/nextjs-graphql-client
+- Reference: [GraphQL スターターパック | Prisma + NestJS + Next.JS製 個人ブログサイトをCloud Runで運用しよう](https://zenn.dev/waddy/books/graphql-nestjs-nextjs-bootcamp)
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
