@@ -1,5 +1,5 @@
-import { Module } from "@nestjs/common";
-import { GraphQLModule } from "@nestjs/graphql";
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
 import { PrismaModule } from '@pb-components/prisma/prisma.module';
 import * as path from 'path';
 import { WinstonModule } from 'nest-winston';
@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { PostsModule } from '@pb-components/posts/posts.module';
 import { PbEnvModule } from '@pb-config/environments/pb-env.module';
 import { PbEnv } from '@pb-config/environments/pb-env.service';
+import { ImpressionModule } from '@pb-components/impression/impression.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PbEnv } from '@pb-config/environments/pb-env.service';
     }),
     PbEnvModule,
     PostsModule,
+    ImpressionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
