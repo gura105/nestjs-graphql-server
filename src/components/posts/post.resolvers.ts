@@ -25,7 +25,6 @@ const s3Client = new S3Client({
 
 const bucket = 'dev-blog-nextjs';
 
-console.log(s3Client.config.credentials);
 @Resolver((of) => PostModel)
 export class PostsResolver {
   constructor(
