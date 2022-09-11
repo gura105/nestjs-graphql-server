@@ -7,6 +7,8 @@ import { FindPostArgs } from './interfaces/find-post-args';
 import { S3Client } from '@aws-sdk/client-s3';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
+import { ImpressionService } from '@pb-components/impression/impression.service';
+import { ImpressionModel } from '@pb-components/impression/interfaces/impression.model';
 
 function streamToString(stream: Readable) {
   const chunks = [];
@@ -30,6 +32,7 @@ export class PostsResolver {
   constructor(
     private readonly prisma: PrismaService,
     private readonly pbEnv: PbEnv,
+    private readonly impressionService: ImpressionService,
   ) {}
 
   @Query(() => [PostModel], { name: 'posts', nullable: true })
@@ -72,5 +75,14 @@ export class PostsResolver {
     const result = await streamToString(Body as Readable);
 
     return result;
+  }
+
+  @ResolveField(() => [ImpressionModel], {
+    name: 'impressions',
+    nullable: false,
+  })
+  async impressions(@Parent() post: PostModel) {
+    const { id } = post;
+    return this.impressionService.search({ postId: id });
   }
 }

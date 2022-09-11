@@ -33,6 +33,7 @@ type PostModel {
   emoji: String
   excerpt: String
   id: ID!
+  impressions: [ImpressionModel!]!
   publishDate: DateTime
   published: Boolean
   thumbNailUrl: String
